@@ -1,0 +1,12 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Construction Sites</h2>
+<a href="{% url 'add_site' %}">+ Add new site</a>
+{% for site in sites %}
+    <div class="card">
+        <a href="{% url 'site_detail' site.id %}"><strong>{{ site.name }}</strong></a> — {{ site.location }}
+    </div>
+{% empty %}
+    <p>No sites yet.</p>
+{% endfor %}
+{% endblock %}

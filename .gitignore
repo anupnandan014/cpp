@@ -1,0 +1,8 @@
+scripts/new_creds.txt
+venv/
+db.sqlite3
+*.sqlite3
+__pycache__/
+*.pyc
+media/
+.env

@@ -1,0 +1,21 @@
+{% extends 'inventory/base.html' %}
+{% load inventory_extras %}
+{% block content %}
+<h2>{{ site.name }}</h2>
+<p>{{ site.location }}</p>
+<a href="{% url 'add_material' site.id %}">+ Add material to track</a>
+
+{% for material in materials %}
+    {% with stock=material_stock|dict_get:material.id %}
+    <div class="card {% if stock.current_stock < stock.threshold %}low-stock{% else %}ok-stock{% endif %}">
+        <strong>{{ material.name }}</strong> — {{ stock.current_stock }} {{ material.unit }}
+        (threshold: {{ stock.threshold }})
+        <br>
+        <a href="{% url 'log_delivery' material.id %}">Log delivery</a> |
+        <a href="{% url 'log_usage' material.id %}">Log usage</a>
+    </div>
+    {% endwith %}
+{% empty %}
+    <p>No materials tracked yet.</p>
+{% endfor %}
+{% endblock %}

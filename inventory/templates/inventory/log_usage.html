@@ -1,0 +1,9 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Log Usage — {{ material.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="number" name="quantity" placeholder="Quantity used" required>
+    <button type="submit">Log Usage</button>
+</form>
+{% endblock %}

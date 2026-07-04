@@ -1,0 +1,10 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Add New Site</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Site name" required>
+    <input type="text" name="location" placeholder="Location">
+    <button type="submit">Create Site</button>
+</form>
+{% endblock %}

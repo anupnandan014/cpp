@@ -1,0 +1,10 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Log Delivery — {{ material.name }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="number" name="quantity" placeholder="Quantity delivered" required>
+    <input type="file" name="receipt_photo">
+    <button type="submit">Log Delivery</button>
+</form>
+{% endblock %}

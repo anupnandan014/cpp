@@ -1,0 +1,9 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Delivery Logged</h2>
+<p>{{ quantity }} {{ material.unit }} of {{ material.name }} added. New stock: {{ current_stock }}</p>
+{% if below_threshold %}
+    <p style="color:red;"><strong>Warning: stock is still below threshold! An alert has been sent.</strong></p>
+{% endif %}
+<a href="{% url 'site_detail' material.site.id %}">Back to site</a>
+{% endblock %}

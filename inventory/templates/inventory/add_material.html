@@ -1,0 +1,11 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Add Material — {{ site.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Material name (e.g. Cement)" required>
+    <input type="text" name="unit" placeholder="Unit (e.g. bags)" required>
+    <input type="number" name="threshold" placeholder="Reorder threshold" required>
+    <button type="submit">Add Material</button>
+</form>
+{% endblock %}
