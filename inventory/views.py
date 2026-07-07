@@ -1,8 +1,10 @@
+import io
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Site, Material, Delivery, UsageLog
 from inventory_toolkit.material_repository import MaterialRepository
 from inventory_toolkit.notification_dispatcher import NotificationDispatcher
+from inventory_toolkit.photo_storage import PhotoStorage
 
 
 def get_repository():
@@ -86,7 +88,12 @@ def log_delivery(request, material_id):
         photo = request.FILES.get('receipt_photo')
 
         receipt_s3_key = None
-        # S3 upload will be added in the next step
+        if photo:
+            photo_bytes = photo.read()
+            storage = PhotoStorage(bucket_name=settings.S3_BUCKET_NAME, region_name=settings.AWS_REGION)
+            receipt_s3_key = storage.upload_receipt_photo(io.BytesIO(photo_bytes), photo.name)
+            photo.file = io.BytesIO(photo_bytes)
+            photo.seek(0)
 
         repo = get_repository()
         updated_item, below_threshold = repo.record_delivery(
