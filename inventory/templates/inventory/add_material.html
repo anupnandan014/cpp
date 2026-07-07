@@ -1,11 +1,27 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
-<h2>Add Material — {{ site.name }}</h2>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="Material name (e.g. Cement)" required>
-    <input type="text" name="unit" placeholder="Unit (e.g. bags)" required>
-    <input type="number" name="threshold" placeholder="Reorder threshold" required>
-    <button type="submit">Add Material</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <a href="{% url 'site_detail' site.id %}" class="text-decoration-none small mb-2 d-inline-block">&larr; Back to {{ site.name }}</a>
+            <h4 class="mb-3">Add material — {{ site.name }}</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Material name</label>
+                    <input type="text" name="name" class="form-control" placeholder="e.g. Cement" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Unit</label>
+                    <input type="text" name="unit" class="form-control" placeholder="e.g. bags" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Reorder threshold</label>
+                    <input type="number" name="threshold" class="form-control" placeholder="e.g. 10" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add material</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

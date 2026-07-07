@@ -1,21 +1,44 @@
 {% extends 'inventory/base.html' %}
 {% load inventory_extras %}
 {% block content %}
-<h2>{{ site.name }}</h2>
-<p>{{ site.location }}</p>
-<a href="{% url 'add_material' site.id %}">+ Add material to track</a>
+<div class="mb-4">
+    <a href="{% url 'home' %}" class="text-decoration-none">&larr; Back to sites</a>
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <div>
+            <h2 class="mb-0">{{ site.name }}</h2>
+            <p class="text-muted mb-0">{{ site.location|default:"No location set" }}</p>
+        </div>
+        <a href="{% url 'add_material' site.id %}" class="btn btn-primary">+ Add material</a>
+    </div>
+</div>
 
+<div class="row g-3">
 {% for material in materials %}
     {% with stock=material_stock|dict_get:material.id %}
-    <div class="card {% if stock.current_stock < stock.threshold %}low-stock{% else %}ok-stock{% endif %}">
-        <strong>{{ material.name }}</strong> — {{ stock.current_stock }} {{ material.unit }}
-        (threshold: {{ stock.threshold }})
-        <br>
-        <a href="{% url 'log_delivery' material.id %}">Log delivery</a> |
-        <a href="{% url 'log_usage' material.id %}">Log usage</a>
+    <div class="col-md-6 col-lg-4">
+        <div class="card p-3 h-100 {% if stock.current_stock < stock.threshold %}stock-low{% else %}stock-ok{% endif %}">
+            <h5 class="mb-1">{{ material.name }}</h5>
+            <p class="mb-2">
+                <span class="fs-4 fw-bold">{{ stock.current_stock }}</span>
+                <span class="text-muted">{{ material.unit }}</span>
+            </p>
+            <p class="text-muted small mb-3">Reorder threshold: {{ stock.threshold }}</p>
+            {% if stock.current_stock < stock.threshold %}
+                <span class="badge bg-danger mb-3 align-self-start">Low stock</span>
+            {% endif %}
+            <div class="d-flex gap-2 mt-auto">
+                <a href="{% url 'log_delivery' material.id %}" class="btn btn-outline-success btn-sm flex-fill">Log delivery</a>
+                <a href="{% url 'log_usage' material.id %}" class="btn btn-outline-secondary btn-sm flex-fill">Log usage</a>
+            </div>
+        </div>
     </div>
     {% endwith %}
 {% empty %}
-    <p>No materials tracked yet.</p>
+    <div class="col-12">
+        <div class="card p-4 text-center text-muted">
+            No materials tracked yet. Click "Add material" to get started.
+        </div>
+    </div>
 {% endfor %}
+</div>
 {% endblock %}

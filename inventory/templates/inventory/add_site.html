@@ -1,10 +1,22 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
-<h2>Add New Site</h2>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="Site name" required>
-    <input type="text" name="location" placeholder="Location">
-    <button type="submit">Create Site</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h4 class="mb-3">Add new site</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Site name</label>
+                    <input type="text" name="name" class="form-control" placeholder="e.g. Riverside Tower" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="location" class="form-control" placeholder="e.g. Dublin">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Create site</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

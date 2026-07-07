@@ -1,9 +1,20 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
-<h2>Usage Logged</h2>
-<p>{{ quantity }} {{ material.unit }} of {{ material.name }} used. Remaining stock: {{ current_stock }}</p>
-{% if below_threshold %}
-    <p style="color:red;"><strong>Low stock! Reorder needed. An alert has been sent.</strong></p>
-{% endif %}
-<a href="{% url 'site_detail' material.site.id %}">Back to site</a>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 text-center">
+            <div class="mb-3">
+                <span class="badge bg-secondary fs-6">Usage logged</span>
+            </div>
+            <p class="mb-1">{{ quantity }} {{ material.unit }} of <strong>{{ material.name }}</strong> used.</p>
+            <p class="fs-4 fw-bold mb-3">Remaining stock: {{ current_stock }}</p>
+            {% if below_threshold %}
+                <div class="alert alert-danger">
+                    Low stock! Reorder needed. An alert has been sent.
+                </div>
+            {% endif %}
+            <a href="{% url 'site_detail' material.site.id %}" class="btn btn-outline-primary">Back to site</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,10 +1,23 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
-<h2>Log Delivery — {{ material.name }}</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="number" name="quantity" placeholder="Quantity delivered" required>
-    <input type="file" name="receipt_photo">
-    <button type="submit">Log Delivery</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <a href="{% url 'site_detail' material.site.id %}" class="text-decoration-none small mb-2 d-inline-block">&larr; Back to {{ material.site.name }}</a>
+            <h4 class="mb-3">Log delivery — {{ material.name }}</h4>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Quantity delivered ({{ material.unit }})</label>
+                    <input type="number" name="quantity" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Receipt photo (optional)</label>
+                    <input type="file" name="receipt_photo" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success w-100">Log delivery</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

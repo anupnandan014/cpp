@@ -1,9 +1,20 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
-<h2>Delivery Logged</h2>
-<p>{{ quantity }} {{ material.unit }} of {{ material.name }} added. New stock: {{ current_stock }}</p>
-{% if below_threshold %}
-    <p style="color:red;"><strong>Warning: stock is still below threshold! An alert has been sent.</strong></p>
-{% endif %}
-<a href="{% url 'site_detail' material.site.id %}">Back to site</a>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 text-center">
+            <div class="mb-3">
+                <span class="badge bg-success fs-6">Delivery logged</span>
+            </div>
+            <p class="mb-1">{{ quantity }} {{ material.unit }} of <strong>{{ material.name }}</strong> added.</p>
+            <p class="fs-4 fw-bold mb-3">New stock: {{ current_stock }}</p>
+            {% if below_threshold %}
+                <div class="alert alert-danger">
+                    Stock is still below threshold. A low-stock alert has been sent.
+                </div>
+            {% endif %}
+            <a href="{% url 'site_detail' material.site.id %}" class="btn btn-outline-primary">Back to site</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
