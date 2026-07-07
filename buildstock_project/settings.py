@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'buildstock_project.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 import os as _os
-_DB_PATH = '/tmp/db.sqlite3' if _os.environ.get('RUNNING_ON_EB') else (BASE_DIR / 'db.sqlite3')
+_DB_PATH = '/tmp/db.sqlite3' if _os.path.isdir('/var/app') else (BASE_DIR / 'db.sqlite3')
 
 DATABASES = {
     'default': {
