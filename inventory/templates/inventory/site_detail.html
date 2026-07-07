@@ -1,44 +1,177 @@
 {% extends 'inventory/base.html' %}
 {% load inventory_extras %}
 {% block content %}
-<div class="mb-4">
-    <a href="{% url 'home' %}" class="text-decoration-none">&larr; Back to sites</a>
-    <div class="d-flex justify-content-between align-items-center mt-2">
-        <div>
-            <h2 class="mb-0">{{ site.name }}</h2>
-            <p class="text-muted mb-0">{{ site.location|default:"No location set" }}</p>
+<a href="{% url 'home' %}" class="text-decoration-none small mb-2 d-inline-block">
+    <i class="bi bi-arrow-left"></i> Back to sites
+</a>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-danger{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <a href="{% url 'add_material' site.id %}" class="btn btn-primary">+ Add material</a>
+    {% endfor %}
+{% endif %}
+
+<div class="hero p-4 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+        <p class="section-label mb-1"><i class="bi bi-building"></i> Site details</p>
+        <h2 class="mb-0">{{ site.name }}</h2>
+        <p class="opacity-75 mb-0"><i class="bi bi-geo-alt"></i> {{ site.location|default:"No location set" }}</p>
     </div>
+    {% if is_admin %}
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addMaterialModal">
+            <i class="bi bi-plus-circle"></i> Add material
+        </button>
+    {% endif %}
 </div>
 
 <div class="row g-3">
 {% for material in materials %}
-    {% with stock=material_stock|dict_get:material.id %}
+    {% with stock=material_stock|dict_get:material.material_id %}
     <div class="col-md-6 col-lg-4">
         <div class="card p-3 h-100 {% if stock.current_stock < stock.threshold %}stock-low{% else %}stock-ok{% endif %}">
-            <h5 class="mb-1">{{ material.name }}</h5>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="bi bi-box-seam" style="color: var(--orange);"></i>
+                <h5 class="mb-0">{{ material.name }}</h5>
+            </div>
             <p class="mb-2">
                 <span class="fs-4 fw-bold">{{ stock.current_stock }}</span>
                 <span class="text-muted">{{ material.unit }}</span>
             </p>
             <p class="text-muted small mb-3">Reorder threshold: {{ stock.threshold }}</p>
             {% if stock.current_stock < stock.threshold %}
-                <span class="badge bg-danger mb-3 align-self-start">Low stock</span>
+                <span class="badge bg-danger mb-3 align-self-start"><i class="bi bi-exclamation-triangle"></i> Low stock</span>
             {% endif %}
             <div class="d-flex gap-2 mt-auto">
-                <a href="{% url 'log_delivery' material.id %}" class="btn btn-outline-success btn-sm flex-fill">Log delivery</a>
-                <a href="{% url 'log_usage' material.id %}" class="btn btn-outline-secondary btn-sm flex-fill">Log usage</a>
+                <button type="button" class="btn btn-outline-success btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#deliveryModal{{ material.material_id }}">
+                    <i class="bi bi-truck"></i> Delivery
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#usageModal{{ material.material_id }}">
+                    <i class="bi bi-dash-circle"></i> Usage
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery modal -->
+    <div class="modal fade" id="deliveryModal{{ material.material_id }}" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content overflow-hidden">
+                <div class="p-4" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color:#fff;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:44px; height:44px; background-color: rgba(25,135,84,0.25);">
+                            <i class="bi bi-truck" style="color:#7ee2ab;"></i>
+                        </div>
+                        <div>
+                            <p class="section-label mb-0">Log delivery</p>
+                            <h5 class="mb-0">{{ material.name }}</h5>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+                <div class="modal-body p-4">
+                    <form method="post" action="{% url 'log_delivery' site.site_id material.material_id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Quantity delivered ({{ material.unit }})</label>
+                            <input type="number" name="quantity" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-camera"></i> Receipt photo (optional)</label>
+                            <input type="file" name="receipt_photo" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle"></i> Log delivery
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage modal -->
+    <div class="modal fade" id="usageModal{{ material.material_id }}" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content overflow-hidden">
+                <div class="p-4" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color:#fff;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:44px; height:44px; background-color: rgba(240,99,29,0.25);">
+                            <i class="bi bi-dash-circle" style="color: var(--orange);"></i>
+                        </div>
+                        <div>
+                            <p class="section-label mb-0">Log usage</p>
+                            <h5 class="mb-0">{{ material.name }}</h5>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+                <div class="modal-body p-4">
+                    <form method="post" action="{% url 'log_usage' site.site_id material.material_id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Quantity used ({{ material.unit }})</label>
+                            <input type="number" name="quantity" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">
+                            <i class="bi bi-check-circle"></i> Log usage
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
     {% endwith %}
 {% empty %}
     <div class="col-12">
-        <div class="card p-4 text-center text-muted">
-            No materials tracked yet. Click "Add material" to get started.
+        <div class="card p-5 text-center text-muted">
+            <i class="bi bi-boxes mb-2 d-block" style="font-size:2rem; opacity:0.4;"></i>
+            No materials tracked yet.
+            {% if is_admin %}<p class="mb-0">Click "Add material" to get started.</p>{% endif %}
         </div>
     </div>
 {% endfor %}
 </div>
+
+{% if is_admin %}
+<div class="modal fade" id="addMaterialModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content overflow-hidden">
+            <div class="p-4" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color:#fff;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:44px; height:44px; background-color: rgba(240,99,29,0.25);">
+                        <i class="bi bi-box-seam" style="color: var(--orange);"></i>
+                    </div>
+                    <div>
+                        <p class="section-label mb-0">New material</p>
+                        <h5 class="mb-0">{{ site.name }}</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body p-4">
+                <form method="post" action="{% url 'add_material' site.site_id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Material name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Cement" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Unit</label>
+                        <input type="text" name="unit" class="form-control" placeholder="e.g. bags" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Reorder threshold</label>
+                        <input type="number" name="threshold" class="form-control" placeholder="e.g. 10" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">
+                        <i class="bi bi-plus-circle"></i> Add material
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

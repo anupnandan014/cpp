@@ -1,0 +1,39 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<div class="hero p-4 mb-4">
+    <p class="section-label mb-1"><i class="bi bi-clock-history"></i> Timeline</p>
+    <h2 class="mb-0">Recent activity</h2>
+</div>
+
+<div class="card p-0">
+    <ul class="list-group list-group-flush">
+    {% for event in events %}
+        <li class="list-group-item d-flex align-items-center gap-3 p-3">
+            {% if event.type == 'delivery' %}
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px; height:40px; background-color: rgba(25,135,84,0.12);">
+                    <i class="bi bi-truck" style="color:#198754;"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <strong>{{ event.quantity }} {{ event.unit }}</strong> of {{ event.material_name }} delivered
+                    <div class="text-muted small"><i class="bi bi-geo-alt"></i> {{ event.site_name }}</div>
+                </div>
+            {% else %}
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px; height:40px; background-color: rgba(240,99,29,0.12);">
+                    <i class="bi bi-dash-circle" style="color: var(--orange);"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <strong>{{ event.quantity }} {{ event.unit }}</strong> of {{ event.material_name }} used
+                    <div class="text-muted small"><i class="bi bi-geo-alt"></i> {{ event.site_name }}</div>
+                </div>
+            {% endif %}
+            <span class="text-muted small flex-shrink-0">{{ event.date }}</span>
+        </li>
+    {% empty %}
+        <li class="list-group-item p-5 text-center text-muted">
+            <i class="bi bi-inbox mb-2 d-block" style="font-size:2rem; opacity:0.4;"></i>
+            No activity yet.
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

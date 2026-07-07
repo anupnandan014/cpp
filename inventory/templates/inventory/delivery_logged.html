@@ -1,19 +1,21 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4 text-center">
-            <div class="mb-3">
-                <span class="badge bg-success fs-6">Delivery logged</span>
+    <div class="col-lg-6">
+        <div class="card p-5 text-center">
+            <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width:64px; height:64px; background-color: rgba(25,135,84,0.12);">
+                <i class="bi bi-check-lg" style="font-size:1.8rem; color:#198754;"></i>
             </div>
-            <p class="mb-1">{{ quantity }} {{ material.unit }} of <strong>{{ material.name }}</strong> added.</p>
-            <p class="fs-4 fw-bold mb-3">New stock: {{ current_stock }}</p>
+            <p class="text-muted mb-1">{{ quantity }} {{ material.unit }} of <strong>{{ material.name }}</strong> added</p>
+            <h2 class="fw-bold mb-3">{{ current_stock }} <span class="fs-6 text-muted fw-normal">{{ material.unit }} in stock</span></h2>
             {% if below_threshold %}
-                <div class="alert alert-danger">
-                    Stock is still below threshold. A low-stock alert has been sent.
+                <div class="alert alert-danger d-flex align-items-center gap-2 justify-content-center">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Stock is still below threshold. A low-stock alert has been sent.
                 </div>
             {% endif %}
-            <a href="{% url 'site_detail' material.site.id %}" class="btn btn-outline-primary">Back to site</a>
+            <a href="{% url 'site_detail' material.site.id %}" class="btn btn-outline-primary mt-2">
+                <i class="bi bi-arrow-left"></i> Back to site
+            </a>
         </div>
     </div>
 </div>

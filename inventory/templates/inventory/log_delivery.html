@@ -1,22 +1,39 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
+<a href="{% url 'site_detail' material.site.id %}" class="text-decoration-none small mb-2 d-inline-block">
+    <i class="bi bi-arrow-left"></i> Back to {{ material.site.name }}
+</a>
+
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4">
-            <a href="{% url 'site_detail' material.site.id %}" class="text-decoration-none small mb-2 d-inline-block">&larr; Back to {{ material.site.name }}</a>
-            <h4 class="mb-3">Log delivery — {{ material.name }}</h4>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">Quantity delivered ({{ material.unit }})</label>
-                    <input type="number" name="quantity" class="form-control" required>
+    <div class="col-lg-6">
+        <div class="card overflow-hidden">
+            <div class="p-4" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color:#fff;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px; height:48px; background-color: rgba(25,135,84,0.25);">
+                        <i class="bi bi-truck" style="font-size:1.4rem; color:#7ee2ab;"></i>
+                    </div>
+                    <div>
+                        <p class="section-label mb-0">Log delivery</p>
+                        <h4 class="mb-0">{{ material.name }}</h4>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Receipt photo (optional)</label>
-                    <input type="file" name="receipt_photo" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success w-100">Log delivery</button>
-            </form>
+            </div>
+            <div class="p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Quantity delivered ({{ material.unit }})</label>
+                        <input type="number" name="quantity" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-camera"></i> Receipt photo (optional)</label>
+                        <input type="file" name="receipt_photo" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-check-circle"></i> Log delivery
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

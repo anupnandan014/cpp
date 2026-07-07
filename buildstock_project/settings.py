@@ -75,10 +75,13 @@ WSGI_APPLICATION = 'buildstock_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+import os as _os
+_DB_PATH = '/tmp/db.sqlite3' if _os.environ.get('RUNNING_ON_EB') else (BASE_DIR / 'db.sqlite3')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',
+        'NAME': _DB_PATH,
     }
 }
 
@@ -131,4 +134,11 @@ AWS_REGION = "us-east-1"
 S3_BUCKET_NAME = "buildstock-receipts-anup"
 DYNAMODB_MATERIALS_TABLE = "Materials"
 DYNAMODB_DELIVERIES_TABLE = "Deliveries"
+DYNAMODB_SITES_TABLE = "Sites"
+DYNAMODB_USAGE_LOGS_TABLE = "UsageLogs"
 SNS_LOW_STOCK_TOPIC_ARN = "arn:aws:sns:us-east-1:431225169372:buildstock-low-stock-alerts"
+
+# Authentication settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'landing'

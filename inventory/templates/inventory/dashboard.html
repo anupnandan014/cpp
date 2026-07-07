@@ -1,0 +1,131 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-0">Dashboard</h2>
+        <p class="text-muted small mb-0">Live stock overview across all sites</p>
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-geo-alt"></i> View sites
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <i class="bi bi-geo-alt-fill stat-icon"></i>
+            <h3 class="mb-0 mt-2">{{ stats.total_sites }}</h3>
+            <p class="text-muted small mb-0">Sites</p>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <i class="bi bi-boxes stat-icon"></i>
+            <h3 class="mb-0 mt-2">{{ stats.total_materials }}</h3>
+            <p class="text-muted small mb-0">Materials tracked</p>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <i class="bi bi-exclamation-triangle-fill stat-icon" style="color:#dc3545;"></i>
+            <h3 class="mb-0 mt-2">{{ stats.low_stock_count }}</h3>
+            <p class="text-muted small mb-0">Low stock</p>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <i class="bi bi-truck stat-icon" style="color:#198754;"></i>
+            <h3 class="mb-0 mt-2">{{ stats.total_deliveries }}</h3>
+            <p class="text-muted small mb-0">Deliveries logged</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-7">
+        <div class="card p-3 h-100">
+            <h6 class="fw-bold mb-3">Stock levels — top 5 materials</h6>
+            <canvas id="stockBarChart" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card p-3 h-100">
+            <h6 class="fw-bold mb-3">Stock health</h6>
+            <canvas id="stockDonutChart" height="180"></canvas>
+        </div>
+    </div>
+</div>
+
+<h5 class="mb-3">Materials</h5>
+<div class="row g-3">
+{% for row in rows %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card p-3 h-100 {% if row.is_low %}stock-low{% else %}stock-ok{% endif %}">
+            <p class="text-muted small mb-1"><i class="bi bi-geo-alt"></i> {{ row.site_name }}</p>
+            <h5 class="mb-1">{{ row.material.name }}</h5>
+            <p class="mb-2">
+                <span class="fs-4 fw-bold">{{ row.current_stock }}</span>
+                <span class="text-muted">{{ row.material.unit }}</span>
+            </p>
+            <p class="text-muted small mb-2">Reorder threshold: {{ row.threshold }}</p>
+            {% if row.is_low %}
+                <span class="badge bg-danger mb-2 align-self-start"><i class="bi bi-exclamation-triangle"></i> Low stock</span>
+            {% endif %}
+            <div class="d-flex gap-2 mt-auto">
+                <a href="{% url 'site_detail' row.material.site_id %}" class="btn btn-outline-primary btn-sm flex-fill">
+                    <i class="bi bi-arrow-right"></i> View site
+                </a>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="col-12">
+        <div class="card p-4 text-center text-muted">
+            No materials tracked yet.
+            {% if is_admin %}
+                <a href="{% url 'home' %}">Go to sites to add one.</a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const barCtx = document.getElementById('stockBarChart');
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_labels_json|safe }},
+        datasets: [{
+            label: 'Current stock',
+            data: {{ chart_values_json|safe }},
+            backgroundColor: '#f0631d',
+            borderRadius: 6,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+const donutCtx = document.getElementById('stockDonutChart');
+new Chart(donutCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Low stock', 'Healthy stock'],
+        datasets: [{
+            data: [{{ low_stock_count }}, {{ ok_stock_count }}],
+            backgroundColor: ['#dc3545', '#12213a'],
+            borderWidth: 0,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+</script>
+{% endblock %}

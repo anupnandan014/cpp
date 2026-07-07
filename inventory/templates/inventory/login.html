@@ -1,0 +1,12 @@
+{% extends 'inventory/base.html' %}
+{% block guest_content %}
+<div class="hero p-5 text-center">
+    <h1 class="display-5 mb-3">Sign in to <span class="accent">BuildStock</span></h1>
+    <p class="fs-5 opacity-75">Use the sign-in button above to continue.</p>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        new bootstrap.Modal(document.getElementById('loginModal')).show();
+    });
+</script>
+{% endblock %}

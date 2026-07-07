@@ -1,0 +1,123 @@
+{% extends 'inventory/base.html' %}
+{% block guest_content %}
+<div class="hero p-5 mb-5 text-center">
+    <p class="section-label mb-2"><i class="bi bi-hammer"></i> Built for construction teams</p>
+    <h1 class="display-4 mb-3">Stock tracking that<br><span class="accent">keeps every site running</span></h1>
+    <p class="fs-5 mb-4 opacity-75 col-lg-8 mx-auto">Log deliveries, track usage, and get notified the moment a material runs low — all from one dashboard.</p>
+    <a href="{% url 'login' %}" class="btn btn-warning btn-lg px-4">
+        <i class="bi bi-box-arrow-in-right"></i> Sign in to get started
+    </a>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-4">
+        <h2 class="fw-bold mb-0" style="color: var(--orange);">5</h2>
+        <p class="text-muted small">Cloud services integrated</p>
+    </div>
+    <div class="col-4">
+        <h2 class="fw-bold mb-0" style="color: var(--orange);">24/7</h2>
+        <p class="text-muted small">Automatic monitoring</p>
+    </div>
+    <div class="col-4">
+        <h2 class="fw-bold mb-0" style="color: var(--orange);">&lt;1min</h2>
+        <p class="text-muted small">Alert response time</p>
+    </div>
+</div>
+
+<p class="section-label text-center mb-2">Why BuildStock</p>
+<h3 class="text-center fw-bold mb-4">Everything you need to manage materials</h3>
+
+<div class="row g-4 text-center mb-5">
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <i class="bi bi-boxes stat-icon mb-2"></i>
+            <h5 class="fw-bold">Real-time stock tracking</h5>
+            <p class="text-muted mb-0">Every delivery and usage updates stock levels instantly across all your sites.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <i class="bi bi-bell stat-icon mb-2"></i>
+            <h5 class="fw-bold">Automatic low-stock alerts</h5>
+            <p class="text-muted mb-0">Get notified by email the moment a material drops below its reorder threshold.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <i class="bi bi-camera stat-icon mb-2"></i>
+            <h5 class="fw-bold">Receipt photo storage</h5>
+            <p class="text-muted mb-0">Attach delivery receipts, securely stored and always accessible.</p>
+        </div>
+    </div>
+</div>
+
+<p class="section-label text-center mb-2">How it works</p>
+<h3 class="text-center fw-bold mb-4">Three simple steps</h3>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <span class="badge rounded-pill mb-2 align-self-start" style="background-color: var(--orange);">1</span>
+            <h5 class="fw-bold">Sign in to your account</h5>
+            <p class="text-muted mb-0">Admins set up sites and materials with reorder thresholds.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <span class="badge rounded-pill mb-2 align-self-start" style="background-color: var(--orange);">2</span>
+            <h5 class="fw-bold">Log deliveries and usage</h5>
+            <p class="text-muted mb-0">Anyone on the team can update stock as materials arrive or get used.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <span class="badge rounded-pill mb-2 align-self-start" style="background-color: var(--orange);">3</span>
+            <h5 class="fw-bold">Get alerted automatically</h5>
+            <p class="text-muted mb-0">When stock drops too low, the right people are notified right away.</p>
+        </div>
+    </div>
+</div>
+
+<p class="section-label text-center mb-2">FAQ</p>
+<h3 class="text-center fw-bold mb-4">Frequently asked questions</h3>
+
+<div class="accordion mb-5" id="faqAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                Who can add new sites and materials?
+            </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body text-muted">Only admin accounts can create new sites and materials. Regular users can log deliveries and usage against existing materials.</div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                How are low-stock alerts sent?
+            </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body text-muted">The moment stock falls below its reorder threshold, an automated alert is sent by email so the right person can act quickly.</div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                Are delivery receipts stored securely?
+            </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body text-muted">Yes — every uploaded receipt photo is stored securely and linked to its delivery record for later reference.</div>
+        </div>
+    </div>
+</div>
+
+<div class="hero p-5 text-center">
+    <h3 class="fw-bold mb-3">Ready to keep your sites stocked?</h3>
+    <a href="{% url 'login' %}" class="btn btn-warning btn-lg px-4">
+        <i class="bi bi-box-arrow-in-right"></i> Sign in now
+    </a>
+</div>
+{% endblock %}
